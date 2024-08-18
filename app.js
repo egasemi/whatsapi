@@ -1,6 +1,6 @@
-const express = require('express');
-const config = require('./config/config');
-const messageRoutes = require('./routes/messageRoutes');
+import express from 'express';
+import config from './config/config.js';
+import messageRoutes from './routes/messageRoutes.js';
 
 const app = express();
 
