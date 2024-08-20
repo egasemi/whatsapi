@@ -6,7 +6,7 @@ import path from 'path';
 // Crear una instancia del cliente de WhatsApp con autenticación local
 const client = new Client({
     authStrategy: new LocalAuth({
-        clientId: 'client-one',
+        clientId: 'prod',
         dataPath: path.resolve('./sessions'),
     })
 });
