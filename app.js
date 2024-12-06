@@ -1,6 +1,7 @@
 import express from 'express';
 import config from './config/config.js';
 import messageRoutes from './routes/messageRoutes.js';
+import testRoutes from './routes/testRoutes.js'
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.use(express.json());
 
 // Monta las rutas
 app.use('/api/messages', messageRoutes);
+app.use('/api/test', testRoutes);
 
 // Inicia el servidor
 app.listen(config.port, () => {
