@@ -54,6 +54,12 @@ export const isWhatsAppNumber = async (number) => {
     return isRegistered;
 };
 
+export const formatNumber = async (number) => {
+    await clientReady;
+    const formatedNumber = await client.getFormattedNumber(String(number))
+    return formatedNumber
+}
+
 export const checkStatus = async () => {
     await clientReady;
     const clientStatus = await client.getState()
