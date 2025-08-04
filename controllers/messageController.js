@@ -17,7 +17,8 @@ export const sendMessage = async (req, res) => {
         await sendWhatsAppMessage(number, message);
         res.status(200).json({ message: 'mensaje enviado' });
     } catch (error) {
-        res.status(500).json({ error: 'Error al enviar el mensaje', details: error.message, message: 'mensaje no enviado' });
+        console.error(`⚠️ Error en controlador: ${error.message}`);
+        res.status(500).json({ error: 'Error al enviar el mensaje', details: error.message });
     }
 };
 

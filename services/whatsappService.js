@@ -34,6 +34,34 @@ const clientReady = new Promise((resolve, reject) => {
         isClientReady = false;
         client.initialize();
     });
+
+    client.on('message_ack', async (msg, ack) => {
+        // Solo actuar cuando el mensaje fue entregado
+        if (ack === 2 && msg.fromMe) {
+            try {
+                const phoneNumber = msg.to.replace('@c.us', '');
+                
+                // Buscar el ID dentro del mensaje con formato *#234#*
+                const match = msg.body.match(/\*#(\d+)#\*/);
+                const messageId = match ? match[1] : null;
+
+                if (messageId) {
+                    console.log(`📩 Mensaje entregado a ${phoneNumber} con ID ${messageId}`);
+
+                    // Llamada HTTP a tu URL
+                    await fetch('https://script.google.com/macros/s/AKfycbwkgPaWklu-xJk7akXyh8Ja8LxvND6_6RA9QblyrpPSS5iHvZWX3TDjDbKp_BcH4UHMtg/exec?fn=editarUltimaCoincidencia', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            id: parseInt(messageId)
+                        })
+                    });
+                }
+            } catch (error) {
+                console.error('⚠️ Error al notificar entrega de mensaje:', error.message);
+            }
+        }
+    })
 });
 
 // Inicializa el cliente de WhatsApp
@@ -43,7 +71,16 @@ client.initialize();
 export const sendMessage = async (number, message) => {
     await clientReady;  // Espera a que el cliente esté listo antes de enviar el mensaje
     const chatId = `${number}@c.us`;
-    await client.sendMessage(chatId, message);
+    if (!isClientReady) {
+        throw new Error('El cliente de WhatsApp no está listo');
+    }
+    try {
+        await client.sendMessage(chatId, message);
+        console.log(`Mensaje enviado a ${number}`);
+    } catch (err) {
+        console.warn(`Error interno al enviar mensaje a ${number}: ${err.message}`);
+        // No lanzamos el error para evitar romper la API si el mensaje fue enviado igual
+    }
 };
 
 // Función para verificar si un número es cliente de WhatsApp
