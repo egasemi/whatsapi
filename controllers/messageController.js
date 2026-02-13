@@ -10,10 +10,10 @@ export const sendMessage = async (req, res) => {
             return res.status(400).json({error: "El número no tiene whatsapp", message: "sin whatsapp"})
         }
 
-        const formatedNumber = await formatNumber(number)
+/*         const formatedNumber = await formatNumber(number)
         if(!formatedNumber.startsWith("+54 9 ")) {
             return res.status(400).json({error: "El número es de otro país", message: "número mal escrito"})
-        }
+        } */
         await sendWhatsAppMessage(number, message);
         res.status(200).json({ message: 'mensaje enviado' });
     } catch (error) {
