@@ -19,6 +19,8 @@ const client = new Client({
 
 let readyResolve;
 let readyReject;
+let reinitInProgress = false;
+let reinitTimer = null;
 
 // “Promise actual” que se recrea cuando reiniciás
 let readyPromise = new Promise((res, rej) => {
@@ -41,7 +43,7 @@ client.on('qr', (qr) => {
     qrcode.generate(qr, {small: true})
 })
 
-client.on('ready', () => {
+client.once('ready', () => {
     console.log("✅ WhatsApp listo")
     isClientReady = true;
     readyResolve()
@@ -58,7 +60,13 @@ client.on('disconnected', async (reason) => {
     try {
         await client.destroy()
     } catch {}
-    client.initialize()
+    clearTimeout(reinitTimer)
+    reinitTimer = setTimeout(() => {
+        console.log('🔄 Re-inicializando cliente...');
+        client.initialize();
+        reinitInProgress = false;
+    }, 5000)
+
 })
 
 client.initialize()
