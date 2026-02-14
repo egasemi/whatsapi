@@ -1,14 +1,12 @@
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
-import path from 'path';
 
 // Crear una instancia del cliente de WhatsApp con autenticación local
 const client = new Client({
     puppeteer: { headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"] },
     authStrategy: new LocalAuth({
         clientId: 'prod',
-        dataPath: path.resolve('./sessions'),
     },)
 });
 
@@ -33,8 +31,16 @@ const clientReady = new Promise((resolve, reject) => {
     client.on('disconnected', (reason) => {
         console.log('Cliente desconectado:', reason);
         isClientReady = false;
-        client.initialize();
+        //client.initialize();
     });
+
+    client.on('authenticated', (session) => {
+        console.log('Autenticado:')
+    })
+
+    client.on("change_state",(message) => {
+        console.log(message)
+    })
 
     client.on('message_ack', async (msg, ack) => {
         // Solo actuar cuando el mensaje fue entregado
