@@ -5,10 +5,11 @@ import path from 'path';
 
 // Crear una instancia del cliente de WhatsApp con autenticación local
 const client = new Client({
+    puppeteer: { headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"] },
     authStrategy: new LocalAuth({
         clientId: 'prod',
         dataPath: path.resolve('./sessions'),
-    })
+    },)
 });
 
 // Promesa para manejar cuando el cliente esté listo
