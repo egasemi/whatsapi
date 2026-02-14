@@ -1,7 +1,9 @@
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
-import { executablePath } from 'puppeteer';
+console.log("PID:", process.pid);
+console.log("WHATS MODULE LOADED", { pid: process.pid, file: import.meta.url, ts: new Date().toISOString() });
+
 
 // Crear una instancia del cliente de WhatsApp con autenticación local
 const client = new Client({
