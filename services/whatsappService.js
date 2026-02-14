@@ -1,10 +1,15 @@
 import pkg from 'whatsapp-web.js'
 const { Client, LocalAuth } = pkg;
 import qrcode from 'qrcode-terminal';
+import { executablePath } from 'puppeteer';
 
 // Crear una instancia del cliente de WhatsApp con autenticación local
 const client = new Client({
-    puppeteer: { headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"] },
+    puppeteer: { 
+        headless: true, 
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        executablePath: '/usr/bin/google-chrome'
+    },
     authStrategy: new LocalAuth({
         clientId: 'prod',
     },)
