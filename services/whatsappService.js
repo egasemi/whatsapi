@@ -8,9 +8,13 @@ console.log("WHATS MODULE LOADED", { pid: process.pid, file: import.meta.url, ts
 // Crear una instancia del cliente de WhatsApp con autenticación local
 const client = new Client({
     puppeteer: { 
-        headless: true, 
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        executablePath: '/usr/bin/google-chrome'
+        headless: "new", 
+        args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--disable-gpu"
+        ],
     },
     authStrategy: new LocalAuth({
         clientId: 'prod',
