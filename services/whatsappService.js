@@ -69,6 +69,10 @@ client.on('disconnected', async (reason) => {
 
 })
 
+client.on('authenticated', () => console.log('🔐 authenticated'));
+client.on('change_state', (s) => console.log('🔁 state:', s));
+client.on('loading_screen', (pct, msg) => console.log('⏳ loading:', pct, msg));
+
 client.initialize()
 
 export async function waitForClientReady() {
@@ -79,10 +83,8 @@ export async function waitForClientReady() {
 // Función para enviar un mensaje
 export const sendMessage = async (number, message) => {
     await waitForClientReady()  // Espera a que el cliente esté listo antes de enviar el mensaje
-    const chatId = `${number}@c.us`;
     console.log(`Mensaje enviado a ${number}`);
-    return client.sendMessage(chatId, message);
-
+    return client.sendMessage(number, message);
 };
 
 // Función para verificar si un número es cliente de WhatsApp
@@ -100,6 +102,14 @@ export const formatNumber = async (number) => {
 export const checkStatus = async () => {
     await waitForClientReady();
     return client.getState()
+}
+
+export const getNumberId = async (number) => {
+    await waitForClientReady();
+    const raw = String(number).replace(/\D/g, "");
+    const numberId = await client.getNumberId(raw)
+    if (!numberId) throw new Error("El número no está registrado en WhatsApp");
+    return numberId._serialized
 }
 
 export { client };

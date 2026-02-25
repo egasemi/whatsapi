@@ -1,4 +1,4 @@
-import { sendMessage as sendWhatsAppMessage, isWhatsAppNumber, formatNumber } from '../services/whatsappService.js';
+import { sendMessage as sendWhatsAppMessage, isWhatsAppNumber, formatNumber,getNumberId } from '../services/whatsappService.js';
 
 // Controlador para enviar un mensaje
 export const sendMessage = async (req, res) => {
@@ -14,7 +14,8 @@ export const sendMessage = async (req, res) => {
         if(!formatedNumber.startsWith("+54 9 ")) {
             return res.status(400).json({error: "El número es de otro país", message: "número mal escrito"})
         } */
-        await sendWhatsAppMessage(number, message);
+        const numberId = await getNumberId(number)
+        await sendWhatsAppMessage(numberId, message);
         res.status(200).json({ message: 'mensaje enviado' });
     } catch (error) {
         console.error(`⚠️ Error en controlador: ${error.message}`);
